@@ -41,20 +41,20 @@ app.get('/usuario/:id', (req, res) =>{
     res.json(usuario);
 });
 
-// app.put('/usuario/:id', (req, res) =>{
-//     const { id } = req.params;
-//     const { nome, email} = req.body;
+app.put('/usuario/:id', (req, res) =>{
+    const { id } = req.params;
+    const { nome, email} = req.body;
 
-//     const usuario = usuarios.find(u =>u.id == id);
+    const usuario = usuarios.find(u =>u.id == id);
 
-//     if(!usuario){
-//         return res.status(404).json({mensagem: "usuario não encontrado!!!"});
-//     };
-//     if(nome) usuario.nome = nome;
-//     if(email) usuario.email = email;
+    if(!usuario){
+        return res.status(404).json({mensagem: "usuario não encontrado!!!"});
+    };
+    if(nome) usuario.nome = nome;
+    if(email) usuario.email = email;
 
-//     res.json({mensagem: `usuario ${usuario.nome} foi encontrado`});
-// });
+    res.json({mensagem: `usuario ${usuario.nome} foi encontrado`});
+});
 
 
 

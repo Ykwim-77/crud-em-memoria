@@ -23,8 +23,39 @@ app.post('/usuarios', (req, res) =>{
     if(!nome || !email){
         return res.status(400).json({mensagem: "nome e email obrigatórios"});
     }
-    return res.status(201).json({mensagem: "criado"})
+    ultimoId++;
+    const novoUsuario = { id: ultimoId, nome, email };
+    usuarios.push(novoUsuario);
+    return res.status(201).json({mensagem: "criado"});
+
+    
 });
+
+app.get('/usuario/:id', (req, res) =>{
+    const { id } = req.params;
+    const usuario = usuarios.find(u => u.id == id)
+
+    if(!usuario){
+        return res.status(404).json({mensagem: "usuario não encontrado!!"});
+    }
+    res.json(usuario);
+});
+
+// app.put('/usuario/:id', (req, res) =>{
+//     const { id } = req.params;
+//     const { nome, email} = req.body;
+
+//     const usuario = usuarios.find(u =>u.id == id);
+
+//     if(!usuario){
+//         return res.status(404).json({mensagem: "usuario não encontrado!!!"});
+//     };
+//     if(nome) usuario.nome = nome;
+//     if(email) usuario.email = email;
+
+//     res.json({mensagem: `usuario ${usuario.nome} foi encontrado`});
+// });
+
 
 
 app.listen(3000);

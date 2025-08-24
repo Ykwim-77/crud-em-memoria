@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>CRUD de Usuários</title>
+</head>
+<body>
+  <h1>Usuários</h1>
+
+  <!-- Formulário para criar usuário -->
+  <form id="formUsuario">
+    <input type="text" id="nome" placeholder="Nome" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <button type="submit">Adicionar</button>
+  </form>
+
+  <h2>Lista de Usuários</h2>
+  <ul id="listaUsuarios"></ul>
+  <script>
+
+    const apiUrl = "http://localhost:3000/usuarios";
+    const lista = document.getElementById("listaUsuarios");
+    const form = document.getElementById("formUsuario");
+
+    async function carregar_usuarios(){
+        const res = await fetch(apiUrl);
+        const usuarios = await res.json();
+
+    //   lista.innerHTML = ""; // limpa lista
+      usuarios.forEach(u => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${u.id} - ${u.nome} (${u.email})
+          <button onclick="deletarUsuario(${u.id})">Remover</button>
+        `;
+        lista.appendChild(li);
+      });
+    };
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+
+      await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, email })
+      });
+
+      form.reset();
+      carregarUsuarios();
+    });
+
+    // Deletar usuário (DELETE)
+    async function deletarUsuario(id) {
+      await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
+      carregarUsuarios();
+    }
+
+
+    carregar_usuarios();
+  </script>
+
+</body>
+</html>

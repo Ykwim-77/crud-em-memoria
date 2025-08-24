@@ -6,15 +6,73 @@ app.use(express.json());
 
 let ultimoId = 1;
 
-const usuario_admin = {
+let usuarios = [
+  {
     id: ultimoId,
     nome: "admin",
     email: "admin@admin"
-}
+  },
+  {
+    id: ++ultimoId,
+    nome: "postman",
+    email: "post@man.com.br"
+  },
+  {
+    id: ++ultimoId,
+    nome: "ana",
+    email: "ana@email.com"
+  },
+  {
+    id: ++ultimoId,
+    nome: "carlos",
+    email: "carlos@email.com"
+  },
+  {
+    id: ++ultimoId,
+    nome: "maria",
+    email: "maria@email.com"
+  },
+  {
+    id: ++ultimoId,
+    nome: "joao",
+    email: "joao@email.com"
+  },
+  {
+    id: ++ultimoId,
+    nome: "lucas",
+    email: "lucas@email.com"
+  },
+  {
+    id: ++ultimoId,
+    nome: "beatriz",
+    email: "bia@email.com"
+  },
+  {
+    id: ++ultimoId,
+    nome: "fernando",
+    email: "fernando@email.com"
+  },
+  {
+    id: ++ultimoId,
+    nome: "juliana",
+    email: "juliana@email.com"
+  },
+  {
+    id: ++ultimoId,
+    nome: "rafael",
+    email: "rafa@email.com"
+  },
+  {
+    id: ++ultimoId,
+    nome: "lais",
+    email: "lais@email.com"
+  }
+];
 
-let usuarios = [usuario_admin];
 app.get('/usuarios', (req, res) =>{
-    res.json(usuarios).status(200);
+    const limit = parseInt(req.query.limit) || usuarios.length;
+
+    res.json(usuarios.slice(0, limit)).status(200);
 });
 app.post('/usuarios', (req, res) =>{
 
@@ -58,12 +116,12 @@ app.put('/usuario/:id', (req, res) =>{
 
 app.delete('/usuario/:id', (req, res) =>{
     const { id } = req.params;
-    const usuario_deletado = usuarios.find(u => u.id == id);
-
+    const usuario_deletado = usuarios.findIndex(u => u.id == id);
+    const usuario_deletado_info = usuarios.find(u => u.id == id);
     if(usuario_deletado === -1){
         return res.status(404).json({mensagem: "usuario não foi encontrado!"});
     };
-    res.json({mensagem: `usuario ${usuario_deletado.nome}, do id ${usuario_deletado.id} foi deletado`});
+    res.json({mensagem: `usuario ${usuario_deletado_info.nome}, do id ${usuario_deletado_info.id} foi deletado`});
     usuarios.splice(usuario_deletado, 1)
 
 });

@@ -1,8 +1,9 @@
 import express from "express";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
-
 
 let ultimoId = 1;
 
@@ -72,7 +73,8 @@ let usuarios = [
 app.get('/usuarios', (req, res) =>{
     const limit = parseInt(req.query.limit) || usuarios.length;
 
-    res.json(usuarios.slice(0, limit)).status(200);
+    res.status(200).json(usuarios.slice(0, limit));
+
 });
 app.post('/usuarios', (req, res) =>{
 
@@ -84,7 +86,7 @@ app.post('/usuarios', (req, res) =>{
 
     const email_valido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if(email_valido.test(email)){
+    if(!email_valido.test(email)){
         return res.status(400).json({mensagem: "email inválido!!"})
     }
 
@@ -99,7 +101,10 @@ app.post('/usuarios', (req, res) =>{
 app.get('/usuario/:id', (req, res) =>{
     const { id } = req.params;
     const usuario = usuarios.find(u => u.id == id)
-
+    const idnumber = parseInt(id);
+    if(isNaN(idnumber)){
+      return res.status(400).json({mensagem: "o id precisa ser um número inteiro"})
+    }
     if(!usuario){
         return res.status(404).json({mensagem: "usuario não encontrado!!"});
     }
@@ -115,24 +120,31 @@ app.put('/usuario/:id', (req, res) =>{
     if(!usuario){
         return res.status(404).json({mensagem: "usuario não encontrado!!!"});
     };
-    if(nome) usuario.nome = nome;
-    if(email) usuario.email = email;
+    res.json({mensagem: `usuario ${usuario.nome}, do id ${usuario.id} foi alterado`});
+    if (nome) usuario.nome = nome;
+    if (email) usuario.email = email;
 
-    res.json({mensagem: `usuario ${usuario.nome}, do id ${usuario.id} foi encontrado`});
 });
 
 app.delete('/usuario/:id', (req, res) =>{
     const { id } = req.params;
-    const usuario_deletado = usuarios.findIndex(u => u.id == id);
-    const usuario_deletado_info = usuarios.find(u => u.id == id);
+    const idnumber = parseInt(id);
+    if(isNaN(idnumber)){
+      return res.status(400).json({mensagem: "o id precisa ser um número inteiro"})
+    }
+    let usuario_deletado = usuarios.findIndex(u => u.id == id);
+    let usuario_deletado_info = usuarios.find(u => u.id == id);
+
     if(usuario_deletado === -1){
         return res.status(404).json({mensagem: "usuario não foi encontrado!"});
     };
+
+
+    
     res.json({mensagem: `usuario ${usuario_deletado_info.nome}, do id ${usuario_deletado_info.id} foi deletado`});
     usuarios.splice(usuario_deletado, 1)
 
 });
-
 
 
 app.listen(3000);

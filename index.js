@@ -81,6 +81,13 @@ app.post('/usuarios', (req, res) =>{
     if(!nome || !email){
         return res.status(400).json({mensagem: "nome e email obrigatórios"});
     }
+
+    const email_valido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(email_valido.test(email)){
+        return res.status(400).json({mensagem: "email inválido!!"})
+    }
+
     ultimoId++;
     const novoUsuario = { id: ultimoId, nome, email };
     usuarios.push(novoUsuario);

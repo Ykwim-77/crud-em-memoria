@@ -1,16 +1,18 @@
 import express from "express";
 import Router from "express";
+import { ListarUsuarios } from "../controller/user-controller";
 
 const roteador = Router();
 
 // passar as rotas para ele 
-roteador.get('/usuarios', (req, res) =>{
-    const limit = parseInt(req.query.limit) || usuarios.length;
-
-    res.status(200).json(usuarios.slice(0, limit));
+roteador.get('/', (req, res) =>{
+    // const limit = parseInt(req.query.limit) || usuarios.length;
+    // res.json({mensagem: "foi?"})
+    // res.status(200).json(usuarios.slice(0, limit));
+    ListarUsuarios();
 
 });
-roteador.post('/usuarios', (req, res) =>{
+roteador.post('/', (req, res) =>{
 
 
     const {nome, email} = req.body;
@@ -31,7 +33,7 @@ roteador.post('/usuarios', (req, res) =>{
 
     
 });
-app.get('/usuarios/:id', (req, res) =>{
+roteador.get('/:id', (req, res) =>{
     const { id } = req.params;
     const usuario = usuarios.find(u => u.id == idnumber)
     const idnumber = parseInt(id);
@@ -43,7 +45,7 @@ app.get('/usuarios/:id', (req, res) =>{
     }
     res.json(usuario);
 });
-app.patch('/usuarios/:id', (req, res) =>{
+roteador.patch('/:id', (req, res) =>{
     const { id } = req.params;
     const idnumber = parseInt(id);
     const { nome, email} = req.body;
@@ -97,7 +99,7 @@ app.patch('/usuarios/:id', (req, res) =>{
 
 });
 
-roteador.delete('/usuarios/:id', (req, res) =>{
+roteador.delete('/:id', (req, res) =>{
     const { id } = req.params;
     const idnumber = parseInt(id);
     if(isNaN(idnumber)){
